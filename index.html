@@ -1,230 +1,532 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DP-RH - Hierarquia de Funções</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background: #f5f7fa; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 30px; }
-        h2 { color: #34495e; margin: 20px 0 15px; border-bottom: 2px solid #3498db; padding-bottom: 8px; }
-        
-        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; margin: 5px; }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-primary:hover { background: #2980b9; }
-        .btn-success { background: #2ecc71; color: white; }
-        .btn-success:hover { background: #27ae60; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-danger:hover { background: #c0392b; }
-        .btn-warning { background: #f39c12; color: white; }
-        .btn-warning:hover { background: #d68910; }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DP/RH · Estilo Gringo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bk:#000;--bk2:#141414;--bk3:#232323;--yl:#B4F000;--wh:#fff;--mut:#9a9a9a;--ok:#2ecc71;--op:#FFD400;--late:#ff4d4d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bk);color:var(--wh);font-family:Barlow,Arial,sans-serif;color-scheme:dark}
+header{border-bottom:4px solid var(--yl);padding:16px 20px}
+h1{font-family:'Bebas Neue',Impact,sans-serif;font-size:42px;letter-spacing:3px;margin:0;color:var(--yl);line-height:1;font-weight:400}
+h1 span{color:var(--wh)}
+.hint{color:var(--mut);margin:4px 0 16px;font-size:14px}
+main{max-width:1200px;margin:0 auto;padding:18px 20px 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:24px}
+.card{background:var(--bk2);border:2px solid var(--bk3);border-left:6px solid var(--k);padding:16px;cursor:pointer;transition:transform .2s,border-color .2s;text-decoration:none}
+.card:hover{transform:translateY(-3px);border-color:var(--yl)}
+.pv{border-radius:4px;overflow:hidden;margin-bottom:10px;background:#000}
+.pv svg{display:block;width:100%;height:auto}
+.nm{font-weight:600;font-size:18px;color:var(--wh)}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+button{cursor:pointer;font:inherit;border:none;border-radius:0}
+button.p{background:var(--yl);color:#000;font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;letter-spacing:1.5px;padding:8px 16px}
+button.s{background:transparent;color:var(--yl);border:1px solid var(--yl);padding:6px 12px}
+button.d{background:transparent;color:var(--late);border:1px solid var(--late);padding:6px 12px}
+button:focus-visible{outline:3px solid var(--yl);outline-offset:1px}
+input,select,textarea{font:inherit;color:var(--wh);background:var(--bk);border:1px solid var(--bk3);padding:8px;border-radius:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--yl);outline-offset:1px}
+dialog{border:2px solid var(--yl);background:var(--bk2);color:var(--wh);padding:24px;width:min(500px,92vw)}
+dialog::backdrop{background:rgba(0,0,0,.8)}
+dialog h2{font-family:'Bebas Neue',Impact,sans-serif;color:var(--yl);margin-top:0}
+dialog label{display:block;margin-top:12px;font-size:14px;color:var(--mut)}
+dialog input,dialog select{width:100%;margin-top:4px}
+.dbtn{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.dbtn .sp{flex:1}
 
-        .form-section { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; display: none; }
-        .form-section.active { display: block; }
-        input, select { padding: 10px; margin: 5px; border: 1px solid #ddd; border-radius: 6px; width: 250px; }
-        
-        .setor-card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 15px 0; background: #fafafa; }
-        .setor-nome { font-size: 1.2em; font-weight: bold; color: #2c3e50; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .pessoa-item { padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .pessoa-item:last-child { border-bottom: none; }
-        .acoes { margin-top: 5px; }
-        
-        .aviso { background: #d4edda; color: #155724; padding: 10px; border-radius: 6px; margin-bottom: 15px; display: none; }
-    </style>
+/* Página de Hierarquia */
+.sub{color:var(--mut);margin:0 0 20px}
+.sec{background:var(--bk2);border:1px solid var(--bk3);border-top:3px solid var(--yl);padding:20px;margin-bottom:24px}
+.sec h2{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;color:var(--yl);margin:0 0 16px}
+.hnav{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.hnav button{background:transparent;color:var(--mut);font-size:28px;padding:4px 12px}
+.hnav button:hover{color:var(--yl)}
+.hlab{text-align:center;min-width:180px}
+.hlab b{font-family:'Bebas Neue',Impact,sans-serif;font-size:22px;color:var(--yl)}
+.hlab span i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bk3);margin:0 3px}
+.hlab span i.on{background:var(--yl)}
+.sc{overflow-x:auto}
+.w{min-width:760px}
+.hg{display:grid;grid-template-columns:160px 32px repeat(6,minmax(0,1fr));gap:6px}
+.hb{background:var(--bk);border:1px solid var(--bk3);border-top:3px solid var(--c,var(--yl));padding:8px 6px;text-align:center;font-size:13px;position:relative}
+.hb b{display:block;font-weight:600;font-size:14px}
+.hb small{display:block;color:var(--mut);font-size:11px}
+.c-dir{--c:var(--late)}.c-ges{--c:var(--op)}.c-lid{--c:var(--ok)}.c-op{--c:var(--yl)}
+.hb.tm{text-align:left;font-size:12px;line-height:1.6;padding-right:28px}
+.hb.tm b{font-size:11px;color:var(--c);font-weight:600}
+.hb .edit-btn{position:absolute;top:4px;right:4px;background:transparent;border:none;color:var(--mut);font-size:14px;padding:0 4px;opacity:0}
+.hb:hover .edit-btn{opacity:1}
+.hb .edit-btn:hover{color:var(--yl)}
+.ar{display:flex;flex-direction:column;align-items:center;padding-top:2px}
+.ar:before{content:"";width:2px;height:14px;background:var(--mut)}
+.ar:after{content:"";border-left:5px solid transparent;border-right:5px solid transparent;border-top:8px solid var(--mut)}
+.arh{display:flex;align-items:center;justify-content:center}
+.arh:before{content:"";width:14px;height:2px;background:var(--mut)}
+.arh:after{content:"";border-top:6px solid transparent;border-bottom:6px solid transparent;border-left:9px solid var(--mut)}
+.hc{position:relative;height:38px}
+.hc i{position:absolute;background:var(--mut)}
+.hc u{position:absolute;margin-left:-6px;bottom:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--mut)}
+.list{margin-top:16px}
+.person-row{display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid var(--bk3);flex-wrap:wrap}
+.person-row .name{flex:1;min-width:180px}
+.person-row .role{color:var(--mut);font-size:14px}
+.person-row .acts{display:flex;gap:6px}
+.empty{padding:20px;text-align:center;color:var(--mut)}
+</style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏢 Hierarquia de Funções - DP-RH</h1>
+<header>
+<h1>HIERARQUIA <span>· ESTILO GRINGO</span></h1>
+<p class="hint">Edite diretamente nas caixas ou use os botões abaixo. Os dados ficam salvos neste navegador.</p>
+</header>
+<main>
 
-        <div class="aviso" id="mensagemAviso"></div>
+<div class="bar">
+<button class="p" id="back">← Voltar</button>
+<button class="s" id="addPerson">+ Adicionar Pessoa</button>
+<button class="s" id="addDept">+ Adicionar Setor/Loja</button>
+<button class="s" id="exportar">📤 Exportar Dados</button>
+<button class="s" id="importar">📥 Importar/Restaurar</button>
+</div>
 
-        <!-- BOTÕES PRINCIPAIS -->
-        <div style="text-align: center; margin-bottom: 25px;">
-            <button class="btn btn-primary" onclick="mostrarFormSetor()">➕ Adicionar Setor</button>
-            <button class="btn btn-success" onclick="mostrarFormPessoa()">👤 Adicionar Pessoa</button>
-        </div>
+<section class="sec">
+<h2 id="ht">ESTRUTURA HIERÁRQUICA</h2>
+<div class="hnav" id="hnav">
+<button type="button" id="hprev" aria-label="Anterior">‹</button>
+<div class="hlab" aria-live="polite"><b id="hnm">Geral</b><span id="hdots"></span></div>
+<button type="button" id="hnext" aria-label="Próxima">›</button>
+</div>
+<div class="sc" id="hgeral"></div>
+<div class="sc" id="hloja" hidden></div>
+</section>
 
-        <!-- FORMULÁRIO SETOR -->
-        <div class="form-section" id="formSetor">
-            <h3 id="tituloFormSetor">Adicionar Novo Setor</h3>
-            <input type="text" id="nomeSetor" placeholder="Nome do setor" required>
-            <br>
-            <button class="btn btn-success" onclick="salvarSetor()">💾 Salvar</button>
-            <button class="btn btn-danger" onclick="fecharFormularios()">❌ Cancelar</button>
-        </div>
+<section class="sec">
+<h2>Lista Completa de Pessoas</h2>
+<div id="listAll"></div>
+</section>
 
-        <!-- FORMULÁRIO PESSOA -->
-        <div class="form-section" id="formPessoa">
-            <h3 id="tituloFormPessoa">Adicionar Nova Pessoa</h3>
-            <input type="text" id="nomePessoa" placeholder="Nome completo" required>
-            <input type="text" id="cargoPessoa" placeholder="Cargo / Função" required>
-            <select id="setorPessoa">
-                <option value="">Selecione o setor</option>
-            </select>
-            <br>
-            <button class="btn btn-success" onclick="salvarPessoa()">💾 Salvar</button>
-            <button class="btn btn-danger" onclick="fecharFormularios()">❌ Cancelar</button>
-        </div>
+</main>
 
-        <!-- LISTA DE SETORES E PESSOAS -->
-        <div id="listaHierarquia"></div>
+<dialog id="dlgPessoa">
+<form id="formPessoa" method="dialog">
+<h2 id="dlgPTitulo">Pessoa</h2>
+<label>Nome completo<input id="pNome" required></label>
+<label>Cargo/Função<input id="pCargo" placeholder="Ex.: Gerente, Vendedor, Estoquista"></label>
+<label>Setor/Loja<select id="pSetor"></select></label>
+<label>Supervisiona (opcional)<select id="pLidera"><option value="">— Ninguém —</option></select></label>
+<label>Observações<input id="pObs" placeholder="Ex.: afastado, férias, etc."></label>
+<div class="dbtn">
+<button type="button" id="pExcluir" class="d" style="display:none">Excluir</button>
+<span class="sp"></span>
+<button type="button" id="pCanc">Cancelar</button>
+<button type="submit" class="p">Salvar</button>
+</div>
+</form>
+</dialog>
+
+<dialog id="dlgSetor">
+<form id="formSetor" method="dialog">
+<h2 id="dlgSTitulo">Setor/Loja</h2>
+<label>Nome<input id="sNome" required placeholder="Ex.: Loja Centro, Vendas, Expedição"></label>
+<label>Cor de destaque<select id="sCor">
+<option value="var(--yl)">Verde Limão</option>
+<option value="var(--op)">Amarelo</option>
+<option value="var(--ok)">Verde</option>
+<option value="var(--late)">Vermelho</option>
+<option value="var(--bk3)">Cinza</option>
+</select></label>
+<label>Tipo<select id="sTipo">
+<option value="dir">Direção</option>
+<option value="ges">Gestão</option>
+<option value="lid">Liderança/Gerência</option>
+<option value="op">Operacional/Equipe</option>
+</select></label>
+<div class="dbtn">
+<button type="button" id="sExcluir" class="d" style="display:none">Excluir Setor</button>
+<span class="sp"></span>
+<button type="button" id="sCanc">Cancelar</button>
+<button type="submit" class="p">Salvar</button>
+</div>
+</form>
+</dialog>
+
+<dialog id="dlgImport">
+<h2>Importar / Restaurar</h2>
+<p>Cole os dados exportados abaixo:</p>
+<textarea id="importData" rows="10" style="width:100%" placeholder="Cole aqui o texto da exportação..."></textarea>
+<div class="dbtn">
+<span class="sp"></span>
+<button id="importCanc">Cancelar</button>
+<button id="importOk" class="p">Restaurar</button>
+</div>
+</dialog>
+
+<script>
+const KEY_HIERARQUIA = 'hierarquia-estilo-gringo-v2';
+
+// DADOS INICIAIS
+const DADOS_PADRAO = {
+  setores: [
+    { id: 'dir', nome: 'Direção', cor: 'var(--late)', tipo: 'dir' },
+    { id: 'ges', nome: 'Gestão', cor: 'var(--op)', tipo: 'ges' },
+    { id: 'lid', nome: 'Liderança', cor: 'var(--ok)', tipo: 'lid' },
+    { id: 'op', nome: 'Equipe Operacional', cor: 'var(--yl)', tipo: 'op' },
+    { id: 'centro', nome: 'Loja Centro', cor: 'var(--yl)', tipo: 'op' },
+    { id: 'jk', nome: 'Loja JK', cor: 'var(--op)', tipo: 'op' },
+    { id: 'kids', nome: 'Loja Kids', cor: 'var(--ok)', tipo: 'op' },
+    { id: 'online', nome: 'Loja Online', cor: 'var(--late)', tipo: 'op' },
+    { id: 'expedicao', nome: 'Expedição', cor: 'var(--bk3)', tipo: 'op' },
+    { id: 'marketing', nome: 'Marketing / Mídia', cor: 'var(--op)', tipo: 'op' },
+    { id: 'fin', nome: 'Financeiro / DP', cor: 'var(--op)', tipo: 'ges' }
+  ],
+  pessoas: [
+    { id: 'p1', nome: 'Thalisson', cargo: 'CEO / Proprietário', setor: 'dir', lidera: ['p2','p3','p4','p5','p6','p7','p8'], obs: '' },
+    { id: 'p2', nome: 'Renaly', cargo: 'Sócia-Diretora', setor: 'dir', lidera: [], obs: '' },
+    { id: 'p3', nome: 'Renan Marques', cargo: 'Fin./DP', setor: 'fin', lidera: [], obs: '' },
+    { id: 'p4', nome: 'Bianca', cargo: 'Gerente · Loja Online', setor: 'online', lidera: ['p9','p10'], obs: '' },
+    { id: 'p5', nome: 'Sergio', cargo: 'Gerente · JK', setor: 'jk', lidera: ['p11','p12','p13'], obs: '' },
+    { id: 'p6', nome: 'Renan Benicio', cargo: 'Gerente · Loja Física', setor: 'centro', lidera: ['p14','p15','p16','p17'], obs: '' },
+    { id: 'p7', nome: 'Nayara', cargo: 'Gerente · Kids', setor: 'kids', lidera: ['p18','p19','p20','p21'], obs: '' },
+    { id: 'p8', nome: 'Lucas Lima', cargo: 'Gerente · Expedição', setor: 'expedicao', lidera: ['p22','p23','p24'], obs: '' },
+    { id: 'p9', nome: 'Beatriz', cargo: 'Vendedora', setor: 'online', lidera: [], obs: '' },
+    { id: 'p10', nome: 'Ana Julia', cargo: 'Vendedora', setor: 'online', lidera: [], obs: '' },
+    { id: 'p11', nome: 'Airla', cargo: 'Vendedora', setor: 'jk', lidera: [], obs: '' },
+    { id: 'p12', nome: 'Rian', cargo: 'Vendedor', setor: 'jk', lidera: [], obs: '' },
+    { id: 'p13', nome: 'Daniel', cargo: 'Vendedor', setor: 'jk', lidera: [], obs: '' },
+    { id: 'p14', nome: 'Wagner', cargo: 'Vendedor', setor: 'centro', lidera: [], obs: '' },
+    { id: 'p15', nome: 'Brunaly', cargo: 'Vendedora', setor: 'centro', lidera: [], obs: '' },
+    { id: 'p16', nome: 'Henrique', cargo: 'Vendedor', setor: 'centro', lidera: [], obs: '' },
+    { id: 'p17', nome: 'Isamara', cargo: 'Operadora de Caixa', setor: 'centro', lidera: [], obs: '' },
+    { id: 'p18', nome: 'Maria Julia', cargo: 'Vendedora', setor: 'kids', lidera: [], obs: '' },
+    { id: 'p19', nome: 'Thalita', cargo: 'Vendedora', setor: 'kids', lidera: [], obs: '' },
+    { id: 'p20', nome: 'Nathalya', cargo: 'Vendedora', setor: 'kids', lidera: [], obs: '' },
+    { id: 'p21', nome: 'Ketlen', cargo: 'Vendedora', setor: 'kids', lidera: [], obs: '' },
+    { id: 'p22', nome: 'Petrônio Junior', cargo: 'Estoquista', setor: 'expedicao', lidera: [], obs: '' },
+    { id: 'p23', nome: 'Jefferson', cargo: 'Estoquista', setor: 'expedicao', lidera: [], obs: '' },
+    { id: 'p24', nome: 'Luan', cargo: 'Estoquista', setor: 'expedicao', lidera: [], obs: 'afastado' },
+    { id: 'p25', nome: 'Junior', cargo: 'Gestor · Marketing', setor: 'marketing', lidera: ['p26','p27','p28','p29','p30'], obs: '' },
+    { id: 'p26', nome: 'Djhon', cargo: 'Social Media', setor: 'marketing', lidera: [], obs: '' },
+    { id: 'p27', nome: 'Davi', cargo: 'Social Media', setor: 'marketing', lidera: [], obs: '' },
+    { id: 'p28', nome: 'Cristian', cargo: 'Social Media', setor: 'marketing', lidera: [], obs: '' },
+    { id: 'p29', nome: 'Rafael', cargo: 'Video Maker', setor: 'marketing', lidera: [], obs: '' },
+    { id: 'p30', nome: 'Lucas Oliveira', cargo: 'Designer', setor: 'marketing', lidera: [], obs: '' }
+  ]
+};
+
+let D = { setores: [], pessoas: [] };
+let pessoaEditarId = null;
+let setorEditarId = null;
+let paginaAtual = 0;
+const NOMES_PAG = ['Geral', 'Loja Centro', 'Loja JK', 'Loja Kids', 'Loja Online', 'Expedição', 'Marketing', 'Financeiro/DP'];
+
+function $id(id){ return document.getElementById(id); }
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function novoId(){ return 'id_' + Date.now() + '_' + Math.random().toString(36).slice(2,9) }
+
+function carregar(){
+  try{
+    const s = localStorage.getItem(KEY_HIERARQUIA);
+    if(s){ D = JSON.parse(s); return; }
+  }catch(e){}
+  D = JSON.parse(JSON.stringify(DADOS_PADRAO));
+  salvar();
+}
+function salvar(){
+  try{ localStorage.setItem(KEY_HIERARQUIA, JSON.stringify(D)); }catch(e){}
+}
+
+// --- Hierarquia ---
+function getPessoasPorSetor(setorId){
+  return D.pessoas.filter(p => p.setor === setorId);
+}
+function getLiderados(pessoaId){
+  return D.pessoas.filter(p => p.lidera && p.lidera.includes(pessoaId));
+}
+function montarCaixa(pessoa){
+  const obs = pessoa.obs ? `<br><small>(${esc(pessoa.obs)})</small>` : '';
+  return `
+    <div class="hb c-${getSetorTipo(pessoa.setor)}" data-pid="${pessoa.id}">
+      <button class="edit-btn" data-pid="${pessoa.id}" title="Editar">✏</button>
+      <b>${esc(pessoa.nome)}</b>
+      <small>${esc(pessoa.cargo)}</small>
+      ${obs}
     </div>
+  `;
+}
+function getSetorTipo(setorId){
+  const s = D.setores.find(x => x.id === setorId);
+  return s ? s.tipo : 'op';
+}
+function getSetorNome(setorId){
+  const s = D.setores.find(x => x.id === setorId);
+  return s ? s.nome : setorId;
+}
 
-    <script>
-        let dados = JSON.parse(localStorage.getItem('dadosRH')) || { setores: [] };
-        let edicao = { tipo: null, indiceSetor: null, indicePessoa: null };
+function renderPaginaGeral(){
+  const direcao = D.pessoas.filter(p => p.setor === 'dir');
+  const gestao = D.pessoas.filter(p => p.setor === 'ges');
+  const lideres = D.pessoas.filter(p => getSetorTipo(p.setor) === 'lid' || p.cargo.includes('Gerente') || p.cargo.includes('Gestor'));
+  const operacional = D.pessoas.filter(p => getSetorTipo(p.setor) === 'op' && !lideres.some(l => l.id === p.id));
 
-        function salvarDados() {
-            localStorage.setItem('dadosRH', JSON.stringify(dados));
-            renderizar();
-        }
+  let html = `<div class="w">
+    <div style="display:flex;justify-content:center">
+      <div class="hb c-dir" style="width:320px">
+        <b>Direção</b>
+        ${direcao.map(p => `<div><b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small><button class="edit-btn" data-pid="${p.id}">✏</button></div>`).join('')}
+      </div>
+    </div>
+    <div class="hc" aria-hidden="true">
+      <i style="left:50%;top:0;height:19px;width:2px;margin-left:-1px"></i>
+      <i style="left:75px;width:calc(194px + (100% - 194px)/2 - 75px);top:18px;height:2px"></i>
+      <i style="left:75px;top:18px;height:12px;width:2px;margin-left:-1px"></i>
+      <i style="left:calc(194px + (100% - 194px)/2);top:18px;height:12px;width:2px;margin-left:-1px"></i>
+      <u style="left:75px"></u><u style="left:calc(194px + (100% - 194px)/2)"></u>
+    </div>
+    <div class="hg">
+      <div class="hb c-ges" style="grid-column:1;grid-row:1/3">
+        <b>Gestão</b>
+        ${gestao.map(p => `<div><b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small><button class="edit-btn" data-pid="${p.id}">✏</button></div>`).join('')}
+      </div>
+      <div class="arh" style="grid-column:2;grid-row:1/3"></div>
+      <div class="hb c-lid" style="grid-column:3/9;grid-row:1">
+        <b>Liderança / Gerência</b>
+      </div>
+      ${lideres.map((p,i) => `<div class="hb c-lid" style="grid-column:${i+3};grid-row:2">
+        <b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small>
+        <button class="edit-btn" data-pid="${p.id}">✏</button>
+      </div>`).join('')}
+      ${lideres.map((_,i) => `<div class="ar" style="grid-column:${i+3};grid-row:3"></div>`).join('')}
+      <div class="hb c-op" style="grid-column:1;grid-row:4/6">
+        <b>Equipe Operacional</b>
+      </div>
+      <div class="arh" style="grid-column:2;grid-row:4/6"></div>
+      ${operacional.map((p,i) => `<div class="hb tm c-op" style="grid-column:${(i%6)+3};grid-row:${Math.floor(i/6)+5}">
+        <b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small>
+        <button class="edit-btn" data-pid="${p.id}">✏</button>
+      </div>`).join('')}
+    </div>
+  </div>`;
+  $id('hgeral').innerHTML = html;
+  $id('hgeral').hidden = false;
+  $id('hloja').hidden = true;
+}
 
-        function mostrarAviso(texto) {
-            const aviso = document.getElementById('mensagemAviso');
-            aviso.textContent = texto;
-            aviso.style.display = 'block';
-            setTimeout(() => aviso.style.display = 'none', 3000);
-        }
+function renderPaginaLoja(nomePagina){
+  const mapPag = {
+    'Loja Centro': ['centro'],
+    'Loja JK': ['jk'],
+    'Loja Kids': ['kids'],
+    'Loja Online': ['online'],
+    'Expedição': ['expedicao'],
+    'Marketing': ['marketing'],
+    'Financeiro/DP': ['fin']
+  };
+  const setoresAlvo = mapPag[nomePagina] || [];
+  const pessoas = D.pessoas.filter(p => setoresAlvo.includes(p.setor));
+  const lideres = pessoas.filter(p => p.cargo.includes('Gerente') || p.cargo.includes('Gestor'));
+  const equipe = pessoas.filter(p => !lideres.some(l => l.id === p.id));
 
-        function mostrarFormSetor(indice = null) {
-            fecharFormularios();
-            document.getElementById('formSetor').classList.add('active');
-            if (indice !== null) {
-                document.getElementById('nomeSetor').value = dados.setores[indice].nome;
-                document.getElementById('tituloFormSetor').textContent = 'Editar Setor';
-                edicao = { tipo: 'setor', indiceSetor: indice };
-            } else {
-                document.getElementById('nomeSetor').value = '';
-                document.getElementById('tituloFormSetor').textContent = 'Adicionar Novo Setor';
-                edicao = { tipo: null };
-            }
-        }
+  let html = `<div class="w">
+    <div style="display:flex;justify-content:center">
+      <div class="hb c-dir" style="width:300px">
+        <b>Direção</b>
+        Thalisson · CEO<br>Renaly · Sócia-Diretora
+      </div>
+    </div>
+    <div class="hc" aria-hidden="true">
+      <i style="left:50%;top:0;height:19px;width:2px;margin-left:-1px"></i>
+      <u style="left:50%"></u>
+    </div>
+    <div class="hg">
+      <div class="hb c-ges" style="grid-column:1;grid-row:1/3">
+        <b>Gestão</b>Renan Marques<br><small>Fin./DP</small>
+      </div>
+      <div class="arh" style="grid-column:2;grid-row:1/3"></div>
+      <div class="hb c-lid" style="grid-column:3/9;grid-row:1">
+        <b>Liderança — ${nomePagina}</b>
+      </div>
+      ${lideres.length ? lideres.map((p,i) => `<div class="hb c-lid" style="grid-column:${i+3};grid-row:2">
+        <b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small>
+        <button class="edit-btn" data-pid="${p.id}">✏</button>
+      </div>`).join('') : '<div style="grid-column:3/9;grid-row:2;padding:8px;color:var(--mut)">Sem líderes cadastrados</div>'}
+      ${lideres.map((_,i) => `<div class="ar" style="grid-column:${i+3};grid-row:3"></div>`).join('')}
+      <div class="hb c-op" style="grid-column:1;grid-row:4">
+        <b>Equipe</b>
+      </div>
+      <div class="arh" style="grid-column:2;grid-row:4"></div>
+      ${equipe.length ? equipe.map((p,i) => `<div class="hb tm c-op" style="grid-column:${(i%6)+3};grid-row:${Math.floor(i/6)+5}">
+        <b>${esc(p.nome)}</b><small>${esc(p.cargo)}</small>
+        <button class="edit-btn" data-pid="${p.id}">✏</button>
+      </div>`).join('') : '<div style="grid-column:3/9;grid-row:5;padding:8px;color:var(--mut)">Sem pessoas nesta página</div>'}
+    </div>
+  </div>`;
+  $id('hloja').innerHTML = html;
+  $id('hgeral').hidden = true;
+  $id('hloja').hidden = false;
+}
 
-        function mostrarFormPessoa(indiceSetor = null, indicePessoa = null) {
-            fecharFormularios();
-            atualizarSelectSetores();
-            document.getElementById('formPessoa').classList.add('active');
-            
-            if (indicePessoa !== null) {
-                const pessoa = dados.setores[indiceSetor].pessoas[indicePessoa];
-                document.getElementById('nomePessoa').value = pessoa.nome;
-                document.getElementById('cargoPessoa').value = pessoa.cargo;
-                document.getElementById('setorPessoa').value = dados.setores[indiceSetor].nome;
-                document.getElementById('tituloFormPessoa').textContent = 'Editar Pessoa';
-                edicao = { tipo: 'pessoa', indiceSetor, indicePessoa };
-            } else {
-                document.getElementById('nomePessoa').value = '';
-                document.getElementById('cargoPessoa').value = '';
-                document.getElementById('tituloFormPessoa').textContent = 'Adicionar Nova Pessoa';
-                edicao = { tipo: null };
-            }
-        }
+function atualizarNavegacao(){
+  $id('hnm').textContent = NOMES_PAG[paginaAtual];
+  $id('hdots').innerHTML = NOMES_PAG.map((_,i) => `<i class="${i===paginaAtual?'on':''}"></i>`).join('');
+  if(paginaAtual === 0) renderPaginaGeral();
+  else renderPaginaLoja(NOMES_PAG[paginaAtual]);
+}
 
-        function fecharFormularios() {
-            document.querySelectorAll('.form-section').forEach(f => f.classList.remove('active'));
-            edicao = { tipo: null, indiceSetor: null, indicePessoa: null };
-        }
+function renderListaCompleta(){
+  const c = $id('listAll');
+  if(!D.pessoas.length){
+    c.innerHTML = '<div class="empty">Nenhuma pessoa cadastrada. Clique em "+ Adicionar Pessoa" para começar.</div>';
+    return;
+  }
+  c.innerHTML = D.pessoas.map(p => `
+    <div class="person-row">
+      <div class="name"><strong>${esc(p.nome)}</strong></div>
+      <div class="role">${esc(p.cargo)} · ${getSetorNome(p.setor)}${p.obs?` (${esc(p.obs)})`:''}</div>
+      <div class="acts">
+        <button class="s" data-pid="${p.id}">Editar</button>
+        <button class="d" data-del="${p.id}">Excluir</button>
+      </div>
+    </div>
+  `).join('');
+}
 
-        function atualizarSelectSetores() {
-            const select = document.getElementById('setorPessoa');
-            select.innerHTML = '<option value="">Selecione o setor</option>';
-            dados.setores.forEach((s, i) => {
-                select.innerHTML += `<option value="${s.nome}">${s.nome}</option>`;
-            });
-        }
+// --- Diálogos ---
+function abrirEditarPessoa(id){
+  const p = D.pessoas.find(x => x.id === id);
+  pessoaEditarId = id;
+  $id('dlgPTitulo').textContent = p ? 'Editar Pessoa' : 'Adicionar Pessoa';
+  $id('pNome').value = p ? p.nome : '';
+  $id('pCargo').value = p ? p.cargo : '';
+  $id('pObs').value = p ? p.obs : '';
+  $id('pExcluir').style.display = p ? 'inline-block' : 'none';
+  
+  $id('pSetor').innerHTML = D.setores.map(s => `<option value="${s.id}" ${p&&p.setor===s.id?'selected':''}>${esc(s.nome)}</option>`).join('');
+  $id('pLidera').innerHTML = '<option value="">— Ninguém —</option>' +
+    D.pessoas.filter(x => x.id !== id).map(x => `<option value="${x.id}" ${p&&p.lidera&&p.lidera.includes(x.id)?'selected':''}>${esc(x.nome)}</option>`).join('');
+  
+  $id('dlgPessoa').showModal();
+}
 
-        function salvarSetor() {
-            const nome = document.getElementById('nomeSetor').value.trim();
-            if (!nome) { alert('Digite o nome do setor!'); return; }
+function abrirEditarSetor(id){
+  const s = D.setores.find(x => x.id === id);
+  setorEditarId = id;
+  $id('dlgSTitulo').textContent = s ? 'Editar Setor/Loja' : 'Adicionar Setor/Loja';
+  $id('sNome').value = s ? s.nome : '';
+  $id('sCor').value = s ? s.cor : 'var(--yl)';
+  $id('sTipo').value = s ? s.tipo : 'op';
+  $id('sExcluir').style.display = s ? 'inline-block' : 'none';
+  $id('dlgSetor').showModal();
+}
 
-            if (edicao.tipo === 'setor') {
-                dados.setores[edicao.indiceSetor].nome = nome;
-                mostrarAviso('✅ Setor atualizado!');
-            } else {
-                dados.setores.push({ nome, pessoas: [] });
-                mostrarAviso('✅ Setor adicionado!');
-            }
-            salvarDados();
-            fecharFormularios();
-        }
+function vincularEventos(){
+  $id('back').onclick = () => history.back();
+  $id('addPerson').onclick = () => abrirEditarPessoa(null);
+  $id('addDept').onclick = () => abrirEditarSetor(null);
+  
+  $id('hprev').onclick = () => { paginaAtual = (paginaAtual - 1 + NOMES_PAG.length) % NOMES_PAG.length; atualizarNavegacao(); };
+  $id('hnext').onclick = () => { paginaAtual = (paginaAtual + 1) % NOMES_PAG.length; atualizarNavegacao(); };
 
-        function salvarPessoa() {
-            const nome = document.getElementById('nomePessoa').value.trim();
-            const cargo = document.getElementById('cargoPessoa').value.trim();
-            const nomeSetor = document.getElementById('setorPessoa').value;
+  document.addEventListener('click', e => {
+    const pid = e.target.dataset.pid;
+    if(pid && e.target.closest('.edit-btn')){ abrirEditarPessoa(pid); return; }
+    if(pid && e.target.matches('[data-pid]')){ abrirEditarPessoa(pid); return; }
+    const delId = e.target.dataset.del;
+    if(delId){
+      if(confirm('Excluir esta pessoa?')){
+        D.pessoas = D.pessoas.filter(x => x.id !== delId);
+        D.pessoas.forEach(p => { if(p.lidera) p.lidera = p.lidera.filter(id => id !== delId); });
+        salvar(); atualizarNavegacao(); renderListaCompleta();
+      }
+    }
+  });
 
-            if (!nome || !cargo || !nomeSetor) { alert('Preencha todos os campos!'); return; }
+  $id('pCanc').onclick = () => { $id('dlgPessoa').close(); };
+  $id('pExcluir').onclick = () => {
+    if(confirm('Excluir esta pessoa?')){
+      D.pessoas = D.pessoas.filter(x => x.id !== pessoaEditarId);
+      D.pessoas.forEach(p => { if(p.lidera) p.lidera = p.lidera.filter(id => id !== pessoaEditarId); });
+      salvar(); atualizarNavegacao(); renderListaCompleta(); $id('dlgPessoa').close();
+    }
+  };
+  $id('formPessoa').onsubmit = e => {
+    e.preventDefault();
+    const nome = $id('pNome').value.trim();
+    if(!nome) return alert('Informe o nome.');
+    const dados = {
+      id: pessoaEditarId || novoId(),
+      nome,
+      cargo: $id('pCargo').value.trim(),
+      setor: $id('pSetor').value,
+      lidera: $id('pLidera').value ? [$id('pLidera').value] : [],
+      obs: $id('pObs').value.trim()
+    };
+    if(pessoaEditarId){
+      const idx = D.pessoas.findIndex(x => x.id === pessoaEditarId);
+      if(idx >= 0) D.pessoas[idx] = dados;
+    }else{
+      D.pessoas.push(dados);
+    }
+    salvar(); atualizarNavegacao(); renderListaCompleta(); $id('dlgPessoa').close();
+  };
 
-            const indiceSetor = dados.setores.findIndex(s => s.nome === nomeSetor);
-            if (indiceSetor === -1) { alert('Setor não encontrado!'); return; }
+  $id('sCanc').onclick = () => { $id('dlgSetor').close(); };
+  $id('sExcluir').onclick = () => {
+    if(confirm('Excluir este setor? Pessoas vinculadas a ele ficarão sem setor.')){
+      D.setores = D.setores.filter(x => x.id !== setorEditarId);
+      salvar(); atualizarNavegacao(); renderListaCompleta(); $id('dlgSetor').close();
+    }
+  };
+  $id('formSetor').onsubmit = e => {
+    e.preventDefault();
+    const nome = $id('sNome').value.trim();
+    if(!nome) return alert('Informe o nome.');
+    const dados = {
+      id: setorEditarId || novoId(),
+      nome,
+      cor: $id('sCor').value,
+      tipo: $id('sTipo').value
+    };
+    if(setorEditarId){
+      const idx = D.setores.findIndex(x => x.id === setorEditarId);
+      if(idx >= 0) D.setores[idx] = dados;
+    }else{
+      D.setores.push(dados);
+      NOMES_PAG.push(nome);
+    }
+    salvar(); atualizarNavegacao(); renderListaCompleta(); $id('dlgSetor').close();
+  };
 
-            if (edicao.tipo === 'pessoa') {
-                dados.setores[edicao.indiceSetor].pessoas[edicao.indicePessoa] = { nome, cargo };
-                mostrarAviso('✅ Pessoa atualizada!');
-            } else {
-                dados.setores[indiceSetor].pessoas.push({ nome, cargo });
-                mostrarAviso('✅ Pessoa adicionada!');
-            }
-            salvarDados();
-            fecharFormularios();
-        }
+  $id('exportar').onclick = () => {
+    const txt = btoa(unescape(encodeURIComponent(JSON.stringify(D,null,2))));
+    const a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8;base64,' + txt;
+    a.download = 'hierarquia-backup-' + new Date().toISOString().slice(0,10) + '.txt';
+    a.click();
+  };
+  $id('importar').onclick = () => { $id('dlgImport').showModal(); };
+  $id('importCanc').onclick = () => { $id('dlgImport').close(); };
+  $id('importOk').onclick = () => {
+    const t = $id('importData').value.trim();
+    if(!t) return alert('Cole os dados exportados.');
+    try{
+      let d;
+      try{ d = JSON.parse(atob(t)); }catch(e){ d = JSON.parse(t); }
+      if(!d.setores || !d.pessoas) throw new Error('Formato inválido');
+      if(confirm('Isso substitui todos os dados atuais. Continuar?')){
+        D = d; salvar(); atualizarNavegacao(); renderListaCompleta(); $id('dlgImport').close();
+      }
+    }catch(e){ alert('Dados inválidos. Verifique o conteúdo copiado.'); }
+  };
+}
 
-        function excluirSetor(indice) {
-            if (confirm(`Tem certeza que deseja excluir o setor "${dados.setores[indice].nome}" e todas as pessoas dele?`)) {
-                dados.setores.splice(indice, 1);
-                salvarDados();
-                mostrarAviso('🗑️ Setor excluído!');
-            }
-        }
-
-        function excluirPessoa(indiceSetor, indicePessoa) {
-            const nome = dados.setores[indiceSetor].pessoas[indicePessoa].nome;
-            if (confirm(`Tem certeza que deseja excluir "${nome}"?`)) {
-                dados.setores[indiceSetor].pessoas.splice(indicePessoa, 1);
-                salvarDados();
-                mostrarAviso('🗑️ Pessoa excluída!');
-            }
-        }
-
-        function renderizar() {
-            const container = document.getElementById('listaHierarquia');
-            if (dados.setores.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:#7f8c8d; padding:20px;">Nenhum setor cadastrado ainda. Clique em "Adicionar Setor" para começar!</p>';
-                return;
-            }
-
-            container.innerHTML = dados.setores.map((setor, iSetor) => `
-                <div class="setor-card">
-                    <div class="setor-nome">
-                        ${setor.nome}
-                        <div>
-                            <button class="btn btn-warning" style="padding:5px 10px; font-size:0.85em;" onclick="mostrarFormSetor(${iSetor})">✏️ Editar</button>
-                            <button class="btn btn-danger" style="padding:5px 10px; font-size:0.85em;" onclick="excluirSetor(${iSetor})">🗑️ Excluir</button>
-                        </div>
-                    </div>
-                    <button class="btn btn-success" style="padding:6px 12px; font-size:0.9em; margin-bottom:10px;" onclick="mostrarFormPessoa(${iSetor})">➕ Adicionar Pessoa</button>
-                    ${setor.pessoas.length === 0 
-                        ? '<p style="color:#999; font-style:italic;">Nenhuma pessoa cadastrada neste setor.</p>'
-                        : setor.pessoas.map((pessoa, iPessoa) => `
-                            <div class="pessoa-item">
-                                <div>
-                                    <strong>${pessoa.nome}</strong><br>
-                                    <span style="color:#555; font-size:0.9em;">${pessoa.cargo}</span>
-                                </div>
-                                <div class="acoes">
-                                    <button class="btn btn-warning" style="padding:5px 10px; font-size:0.85em;" onclick="mostrarFormPessoa(${iSetor}, ${iPessoa})">✏️ Editar</button>
-                                    <button class="btn btn-danger" style="padding:5px 10px; font-size:0.85em;" onclick="excluirPessoa(${iSetor}, ${iPessoa})">🗑️ Excluir</button>
-                                </div>
-                            </div>
-                        `).join('')
-                    }
-                </div>
-            `).join('');
-        }
-
-        renderizar();
-    </script>
+carregar();
+vincularEventos();
+atualizarNavegacao();
+renderListaCompleta();
+</script>
 </body>
 </html>
